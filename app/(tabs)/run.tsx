@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, WebView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { WebView } from 'react-native-webview';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Play, RefreshCw, Maximize2, Terminal, Globe, Smartphone } from 'lucide-react-native';
 import { useFileStore } from '@/store/fileStore';
@@ -58,27 +59,27 @@ export default function RunScreen() {
           // Pour JavaScript, on pourrait utiliser eval (dangereux) ou un sandbox
           setOutput(prev => prev + '\n// JavaScript execution is not supported in preview mode.\n// Use the export feature to run in a browser.');
           break;
-          
+
         case 'html':
           setOutput(prev => prev + '\n// HTML preview available in Web view mode.');
           setViewMode('web');
           break;
-          
+
         case 'css':
           setOutput(prev => prev + '\n// CSS files cannot be run directly.\n// Include them in an HTML file.');
           break;
-          
+
         case 'py':
           setOutput(prev => prev + '\n// Python execution requires a Python runtime.\n// Export and run on a system with Python installed.');
           break;
-          
+
         default:
           setOutput(prev => prev + `\n// Cannot execute ${activeFile.type.toUpperCase()} files.`);
       }
 
       // Utiliser la fonction runFile du store pour partager
       await runFile(activeFile.id);
-      
+
     } catch (error) {
       setOutput(prev => prev + `\nError: ${error}`);
       if (soundSettings.error.enabled) {
@@ -129,7 +130,7 @@ export default function RunScreen() {
             { color: viewMode === 'console' ? colors.background : colors.primary }
           ]}>Console</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[
             styles.viewModeButton,
@@ -143,7 +144,7 @@ export default function RunScreen() {
             { color: viewMode === 'web' ? colors.background : colors.primary }
           ]}>Web</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[
             styles.viewModeButton,

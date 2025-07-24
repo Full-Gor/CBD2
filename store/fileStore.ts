@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Platform } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
@@ -34,7 +35,7 @@ interface FileStore {
   recentFiles: FileData[];
   undoStack: string[];
   redoStack: string[];
-  
+
   // Paramètres de l'éditeur
   theme: string;
   autoComplete: boolean;
@@ -45,10 +46,10 @@ interface FileStore {
   lineNumbers: boolean;
   wordWrap: boolean;
   syntaxHighlighting: boolean;
-  
+
   // Paramètres des sons
   soundSettings: SoundSettings;
-  
+
   // Actions pour les fichiers
   openFile: (file: FileData) => void;
   closeFile: (fileId: string) => void;
@@ -65,7 +66,7 @@ interface FileStore {
   runFile: (fileId: string) => Promise<void>;
   undo: () => void;
   redo: () => void;
-  
+
   // Actions pour les paramètres
   setTheme: (theme: string) => void;
   setAutoComplete: (enabled: boolean) => void;
@@ -126,7 +127,7 @@ export const useFileStore = create<FileStore>((set, get) => ({
   recentFiles: [],
   undoStack: [],
   redoStack: [],
-  
+
   // Paramètres par défaut
   theme: 'cyberpunk',
   autoComplete: true,
@@ -192,6 +193,17 @@ export const useFileStore = create<FileStore>((set, get) => ({
     if (!file) return;
 
     try {
+      // Vérifier si on est sur web
+      if (Platform.OS === 'web') {
+        // Sur web, on simule juste la sauvegarde
+        set((state) => ({
+          openFiles: state.openFiles.map(f =>
+            f.id === fileId ? { ...f, isModified: false } : f
+          ),
+        }));
+        return;
+      }
+
       const documentsDir = FileSystem.documentDirectory;
       const filePath = `${documentsDir}${file.name}`;
 
@@ -401,6 +413,12 @@ export const useFileStore = create<FileStore>((set, get) => ({
     try {
       await get().saveFile(fileId);
 
+      // Sur web, on ne peut pas utiliser FileSystem
+      if (Platform.OS === 'web') {
+        console.log('File execution not available on web platform');
+        return;
+      }
+
       if (file.type === 'html') {
         const runnerContent = file.content;
         const runnerPath = `${FileSystem.documentDirectory}runner.html`;
@@ -514,47 +532,47 @@ export const useFileStore = create<FileStore>((set, get) => ({
     set({ theme });
     get().saveSettings();
   },
-  
+
   setAutoComplete: (enabled) => {
     set({ autoComplete: enabled });
     get().saveSettings();
   },
-  
+
   setBracketMatching: (enabled) => {
     set({ bracketMatching: enabled });
     get().saveSettings();
   },
-  
+
   setVoiceCommands: (enabled) => {
     set({ voiceCommands: enabled });
     get().saveSettings();
   },
-  
+
   setKeyboardSize: (size) => {
     set({ keyboardSize: size });
     get().saveSettings();
   },
-  
+
   setFontSize: (size) => {
     set({ fontSize: size });
     get().saveSettings();
   },
-  
+
   setLineNumbers: (enabled) => {
     set({ lineNumbers: enabled });
     get().saveSettings();
   },
-  
+
   setWordWrap: (enabled) => {
     set({ wordWrap: enabled });
     get().saveSettings();
   },
-  
+
   setSyntaxHighlighting: (enabled) => {
     set({ syntaxHighlighting: enabled });
     get().saveSettings();
   },
-  
+
   setSoundEnabled: (soundType, enabled) => {
     set((state) => ({
       soundSettings: {
@@ -567,7 +585,7 @@ export const useFileStore = create<FileStore>((set, get) => ({
     }));
     get().saveSettings();
   },
-  
+
   setSoundUri: (soundType, uri) => {
     set((state) => ({
       soundSettings: {
@@ -580,7 +598,7 @@ export const useFileStore = create<FileStore>((set, get) => ({
     }));
     get().saveSettings();
   },
-  
+
   loadSettings: async () => {
     try {
       const settingsData = await AsyncStorage.getItem('editorSettings');
@@ -603,7 +621,7 @@ export const useFileStore = create<FileStore>((set, get) => ({
       console.error('Error loading settings:', error);
     }
   },
-  
+
   saveSettings: async () => {
     const state = get();
     const settings = {
@@ -618,7 +636,7 @@ export const useFileStore = create<FileStore>((set, get) => ({
       syntaxHighlighting: state.syntaxHighlighting,
       soundSettings: state.soundSettings,
     };
-    
+
     try {
       await AsyncStorage.setItem('editorSettings', JSON.stringify(settings));
     } catch (error) {

@@ -83,9 +83,12 @@ export function CodeEditor({ file, onFocus, onBlur }: CodeEditorProps) {
     // Move cursor to end of snippet
     const newCursorPosition = selection.start + snippet.length;
     setTimeout(() => {
-      textInputRef.current?.setNativeProps({
-        selection: { start: newCursorPosition, end: newCursorPosition }
-      });
+      if (textInputRef.current) {
+        // Pour React Native
+        textInputRef.current.setSelection?.(newCursorPosition, newCursorPosition);
+        // Alternative pour focus
+        textInputRef.current.focus();
+      }
     }, 100);
   };
 
@@ -448,7 +451,6 @@ const styles = StyleSheet.create({
     fontFamily: 'monospace',
     padding: 10,
     textAlignVertical: 'top',
-    caretHidden: false,
   },
   modifiedIndicator: {
     position: 'absolute',

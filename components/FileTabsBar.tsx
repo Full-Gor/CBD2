@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { X, FileText, FileCode, FileJson, Image, Music, Video } from 'lucide-react-native';
 import { useFileStore } from '@/store/fileStore';
 import { SoundManager } from '@/utils/soundManager';
 
 export function FileTabsBar() {
-  const { 
-    openFiles, 
-    activeFileId, 
-    setActiveFile, 
+  const {
+    openFiles,
+    activeFileId,
+    setActiveFile,
     closeFile,
     theme,
-    soundSettings 
+    soundSettings
   } = useFileStore();
-  
+
   // Charger les sons
   useEffect(() => {
     if (soundSettings) {
       SoundManager.loadAllSounds(soundSettings, ['tabSwitch', 'delete']);
     }
-    
+
     return () => {
       SoundManager.unloadAllSounds();
     };
