@@ -208,7 +208,7 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Matriss Editor</Text>
+        <Text style={styles.title}>CBD Editor</Text>
         <SettingsIcon size={24} color="#00ff41" />
       </View>
 
@@ -228,6 +228,7 @@ export default function SettingsScreen() {
             {renderThemeOption('cyan-red', { primary: '#00ffff', secondary: '#ff0040' })}
             {renderThemeOption('gold-red', { primary: '#ffd700', secondary: '#ff0040' })}
             {renderThemeOption('gold-red-cyan', { primary: '#ffd700', secondary: '#ff0040', tertiary: '#00ffff' })}
+            {renderThemeOption('neon-genesis', { primary: '#a020f0', secondary: '#00ff00', tertiary: '#ff1493' })}
           </View>
         </View>
 
@@ -394,7 +395,7 @@ export default function SettingsScreen() {
           </Text>
 
           <View style={styles.aboutContainer}>
-            <Text style={styles.aboutText}>Matriss Editor</Text>
+            <Text style={styles.aboutText}>CBD Editor</Text>
             <Text style={styles.aboutVersion}>Version 1.0.0</Text>
             <Text style={styles.aboutDescription}>
               Click'n Build Designer - A cyberpunk-themed code editor for mobile devices with advanced features

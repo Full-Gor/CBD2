@@ -132,6 +132,21 @@ const SYNTAX_THEMES = {
     operator: '#ff0040',
     default: '#ffffff',
   },
+  'neon-genesis': {
+    keyword: '#a020f0', // Purple
+    string: '#00ff00',  // Bright green
+    number: '#ff1493',  // Deep pink
+    comment: '#4b0082', // Indigo
+    function: '#ffd700', // Gold
+    tag: '#a020f0',
+    attribute: '#00ff00',
+    selector: '#a020f0',
+    property: '#00ff00',
+    value: '#ff1493',
+    variable: '#ffd700',
+    operator: '#ff1493',
+    default: '#ffffff',
+  },
 };
 
 const KEYWORDS = {
@@ -145,13 +160,13 @@ const KEYWORDS = {
   css: ['color', 'background', 'background-color', 'font-size', 'font-family', 'font-weight', 'margin', 'padding', 'border', 'width', 'height', 'display', 'position', 'top', 'left', 'right', 'bottom', 'flex', 'grid', 'align-items', 'justify-content', 'text-align', 'line-height', 'overflow', 'z-index', 'opacity', 'transform', 'transition', 'animation', 'hover', 'active', 'focus', 'before', 'after'],
 };
 
-export function SyntaxHighlighter({ 
-  code, 
-  language, 
-  style, 
-  theme, 
-  syntaxHighlighting, 
-  fontSize = 14 
+export function SyntaxHighlighter({
+  code,
+  language,
+  style,
+  theme,
+  syntaxHighlighting,
+  fontSize = 14
 }: SyntaxHighlighterProps) {
   if (!syntaxHighlighting) {
     return (
@@ -167,7 +182,7 @@ export function SyntaxHighlighter({
   const tokenize = (text: string) => {
     const tokens: { type: string; value: string }[] = [];
     let remaining = text;
-    
+
     while (remaining.length > 0) {
       let matched = false;
 
@@ -270,7 +285,7 @@ export function SyntaxHighlighter({
     <Text style={[styles.code, style, { fontSize, lineHeight: fontSize * 1.3 }]}>
       {tokens.map((token, index) => {
         let color = colors.default;
-        
+
         switch (token.type) {
           case 'keyword':
             color = colors.keyword;

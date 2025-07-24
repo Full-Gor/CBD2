@@ -133,6 +133,12 @@ export function AutoComplete({ currentWord, onSelect, onClose, fileType }: AutoC
       text: '#ffd700',
       hover: '#001a1a',
     },
+    'neon-genesis': {
+      background: '#1a1a1a',
+      border: '#a020f0',
+      text: '#00ff00',
+      hover: '#1a0a2e',
+    },
   };
 
   const colors = THEME_COLORS[theme as keyof typeof THEME_COLORS] || THEME_COLORS.cyberpunk;

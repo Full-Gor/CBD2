@@ -7,30 +7,34 @@ import { FileTabsBar } from '@/components/FileTabsBar';
 import { CustomKeyboard } from '@/components/CustomKeyboard';
 import { useFileStore } from '@/store/fileStore';
 import { VoiceCommands } from '@/components/VoiceCommands';
-import { Save, Play, Mic, MicOff, Terminal, Maximize2 } from 'lucide-react-native';
+import { Save, Play, Mic, MicOff, Terminal, Maximize2, Palette } from 'lucide-react-native';
 import { SoundManager } from '@/utils/soundManager';
+import { MatrixRain } from '@/components/MatrixRain';
+import { GlitchText } from '@/components/GlitchText';
 
 const { height } = Dimensions.get('window');
 
 export default function EditorScreen() {
-  const { 
-    openFiles, 
-    activeFileId, 
-    setActiveFile, 
-    closeFile, 
-    saveFile, 
-    updateFileContent, 
-    runFile, 
-    undo, 
+  const {
+    openFiles,
+    activeFileId,
+    setActiveFile,
+    closeFile,
+    saveFile,
+    updateFileContent,
+    runFile,
+    undo,
     redo,
     theme,
-    soundSettings 
+    setTheme,
+    soundSettings
   } = useFileStore();
-  
+
   const [showKeyboard, setShowKeyboard] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(280);
   const [showVoiceCommands, setShowVoiceCommands] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
 
   const activeFile = openFiles.find(file => file.id === activeFileId);
 
@@ -39,12 +43,12 @@ export default function EditorScreen() {
     if (soundSettings) {
       SoundManager.loadAllSounds(soundSettings, ['save', 'run', 'error', 'pageChange']);
     }
-    
+
     return () => {
       SoundManager.unloadAllSounds();
     };
   }, [soundSettings]);
-  
+
   const playSound = async (soundType: string) => {
     if (soundSettings[soundType as keyof typeof soundSettings]?.enabled) {
       await SoundManager.playSound(soundType);
@@ -132,6 +136,16 @@ export default function EditorScreen() {
       headerBorder: '#00ffff',
       headerText: '#ffd700',
       tabText: '#00ffff',
+    },
+    'neon-genesis': {
+      title: '#a020f0',
+      subtitle: '#00ff00',
+      matrix: '#ff1493',
+      code: '#a020f0',
+      background: '#0a0a0a',
+      headerBorder: '#ff1493',
+      headerText: '#a020f0',
+      tabText: '#00ff00',
     },
   };
   const colors = THEME_COLORS[theme as keyof typeof THEME_COLORS] || THEME_COLORS.cyberpunk;
@@ -230,8 +244,15 @@ export default function EditorScreen() {
   if (!activeFile) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+        {/* Animation Matrix Rain en arrière-plan */}
+        <MatrixRain color={colors.matrix} />
+
         <View style={[styles.header, { borderBottomColor: colors.headerBorder }]}>
-          <Text style={[styles.title, { color: colors.headerText }]}>{'Matriss Editor'}</Text>
+          <GlitchText
+            text="CBD Editor"
+            color={colors.headerText}
+            fontSize={20}
+          />
           <View style={styles.headerButtons}>
             <TouchableOpacity onPress={handleShowVoiceCommands} style={styles.headerButton}>
               <Mic size={20} color={colors.headerText} />
@@ -240,9 +261,19 @@ export default function EditorScreen() {
         </View>
 
         <View style={styles.emptyState}>
-          <Text style={[styles.emptyText, { color: colors.title }]}>// Matriss Editor v1.0</Text>
+          <GlitchText
+            text="// Matrix Editor v1.0"
+            color={colors.title}
+            fontSize={24}
+            style={styles.emptyText}
+          />
           <Text style={[styles.emptySubtext, { color: colors.subtitle }]}>Open a file from the Files tab to start coding</Text>
-          <Text style={[styles.matrixText, { color: colors.matrix }]}>{'The Matriss has you...'}</Text>
+          <GlitchText
+            text="The Matrix has you..."
+            color={colors.matrix}
+            fontSize={18}
+            style={styles.matrixText}
+          />
           <View style={styles.matrixCode}>
             <Text style={[styles.codeText, { color: colors.code }]}>01001000 01100101 01101100 01101100 01101111</Text>
             <Text style={[styles.codeText, { color: colors.code }]}>01010111 01101111 01110010 01101100 01100100</Text>
@@ -261,8 +292,15 @@ export default function EditorScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Animation Matrix Rain en arrière-plan */}
+      <MatrixRain color={colors.matrix} />
+
       <View style={[styles.header, { borderBottomColor: colors.headerBorder }]}>
-        <Text style={[styles.title, { color: colors.headerText }]}>{'CBD Editor'}</Text>
+        <GlitchText
+          text="CBD Editor"
+          color={colors.headerText}
+          fontSize={20}
+        />
         <View style={styles.headerButtons}>
           <TouchableOpacity onPress={handleSave} style={styles.headerButton}>
             <Save size={20} color={colors.headerText} />
@@ -335,16 +373,14 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#00ff41',
-    backgroundColor: '#1a1a1a',
+    backgroundColor: 'rgba(26, 26, 26, 0.9)',
+    zIndex: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#00ff41',
     fontFamily: 'monospace',
-    textShadowColor: '#00ff41',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 5,
   },
   headerButtons: {
     flexDirection: 'row',
@@ -363,21 +399,20 @@ const styles = StyleSheet.create({
   },
   editorContainer: {
     flex: 1,
+    zIndex: 5,
   },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    zIndex: 5,
   },
   emptyText: {
     fontSize: 24,
     color: '#00ff41',
     marginBottom: 8,
     fontFamily: 'monospace',
-    textShadowColor: '#00ff41',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 5,
   },
   emptySubtext: {
     fontSize: 16,
@@ -390,9 +425,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#ff0080',
     fontFamily: 'monospace',
-    textShadowColor: '#ff0080',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 3,
     marginBottom: 20,
   },
   matrixCode: {
@@ -404,5 +436,39 @@ const styles = StyleSheet.create({
     color: '#00ff41',
     fontFamily: 'monospace',
     opacity: 0.5,
+  },
+  themeDropdown: {
+    position: 'absolute',
+    top: 60,
+    right: 16,
+    width: 200,
+    maxHeight: 300,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#333',
+    overflow: 'hidden',
+    zIndex: 10,
+    elevation: 10,
+  },
+  themeList: {
+    flex: 1,
+  },
+  themeItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  themeColorPreview: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    marginRight: 12,
+  },
+  themeItemText: {
+    fontSize: 14,
+    fontFamily: 'monospace',
+    flex: 1,
   },
 });

@@ -18,6 +18,7 @@ export default function TabLayout() {
       'cyan-red': { active: '#00ffff', inactive: '#666' },
       'gold-red': { active: '#ffd700', inactive: '#666' },
       'gold-red-cyan': { active: '#ffd700', inactive: '#666' },
+      'neon-genesis': { active: '#a020f0', inactive: '#4b0082' },
     };
 
     return themes[theme as keyof typeof themes] || themes.cyberpunk;

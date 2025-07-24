@@ -84,9 +84,9 @@ export function CodeEditor({ file, onFocus, onBlur }: CodeEditorProps) {
     const newCursorPosition = selection.start + snippet.length;
     setTimeout(() => {
       if (textInputRef.current) {
-        // Pour React Native
-        textInputRef.current.setSelection?.(newCursorPosition, newCursorPosition);
-        // Alternative pour focus
+        // Pour web et mobile moderne
+        textInputRef.current.setSelectionRange?.(newCursorPosition, newCursorPosition);
+        // Alternative pour React Native
         textInputRef.current.focus();
       }
     }, 100);
@@ -178,6 +178,12 @@ export function CodeEditor({ file, onFocus, onBlur }: CodeEditorProps) {
       snippetBorder: '#00ffff',
       lineNumber: '#666',
       selection: '#ffd700',
+    },
+    'neon-genesis': {
+      snippetButton: '#a020f0',
+      snippetBorder: '#ff1493',
+      lineNumber: '#4b0082',
+      selection: '#a020f0',
     },
   };
 
@@ -451,6 +457,7 @@ const styles = StyleSheet.create({
     fontFamily: 'monospace',
     padding: 10,
     textAlignVertical: 'top',
+    caretHidden: false,
   },
   modifiedIndicator: {
     position: 'absolute',

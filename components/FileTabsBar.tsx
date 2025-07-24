@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { X, FileText, FileCode, FileJson, Image, Music, Video } from 'lucide-react-native';
 import { useFileStore } from '@/store/fileStore';
@@ -150,6 +150,15 @@ export function FileTabsBar() {
       inactiveText: '#666',
       icon: '#00ffff',
       closeIcon: '#ff0040',
+    },
+    'neon-genesis': {
+      activeTab: '#1a0a2e',
+      activeBorder: '#a020f0',
+      activeText: '#a020f0',
+      inactiveTab: '#1a1a1a',
+      inactiveText: '#4b0082',
+      icon: '#00ff00',
+      closeIcon: '#ff1493',
     },
   };
 
